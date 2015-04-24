@@ -1,17 +1,21 @@
+Some Personal Note
+==================
+
 # ECMAScript 6 <sup>[git.io/es6features](http://git.io/es6features)</sup>
 
 ## Introduction
 ECMAScript 6, also known as ECMAScript 2015, is the upcoming version of the ECMAScript standard.  This standard is targeting ratification in June 2015.  ES6 is a significant update to the language, and the first update to the language since ES5 was standardized in 2009. Implementation of these features in major JavaScript engines is [underway now](http://kangax.github.io/es5-compat-table/es6/).
 
+/* read */
 See the [draft ES6 standard](https://people.mozilla.org/~jorendorff/es6-draft.html) for full specification of the ECMAScript 6 language.
 
 ES6 includes the following new features:
-- [arrows](#arrows)
-- [classes](#classes)
+- [arrows](#arrows)                                                            /* note */ // (args) => function-body
+- [classes](#classes)                                                          /* todo */ // not needed temporally
 - [enhanced object literals](#enhanced-object-literals)
-- [template strings](#template-strings)
-- [destructuring](#destructuring)
-- [default + rest + spread](#default--rest--spread)
+- [template strings](#template-strings)                                        /* note */ // this part is cool.
+- [destructuring](#destructuring)                                              /* note */ // destructuring
+- [default + rest + spread](#default--rest--spread)                            /* note */ [a, b, , c] = [1, 2, 3, 4], (arg1, ...args), ...[a, b, c] === (a, b, c)
 - [let + const](#let--const)
 - [iterators + for..of](#iterators--forof)
 - [generators](#generators)
@@ -35,7 +39,7 @@ Arrows are a function shorthand using the `=>` syntax.  They are syntactically s
 
 ```JavaScript
 // Expression bodies
-var odds = evens.map(v => v + 1);
+var odds = evens.map(v => v + 1);                          /* note */ // v => v + 1
 var nums = evens.map((v, i) => v + i);
 var pairs = evens.map(v => ({even: v, odd: v + 1}));
 
@@ -100,7 +104,7 @@ var obj = {
      return "d " + super.toString();
     },
     // Computed (dynamic) property names
-    [ 'prop_' + (() => 42)() ]: 42
+    [ 'prop_' + (() => 42)() ]: 42      /* note */// dynamic property names 
 };
 ```
 
@@ -117,7 +121,7 @@ Template strings provide syntactic sugar for constructing strings.  This is simi
 
 // String interpolation
 var name = "Bob", time = "today";
-`Hello ${name}, how are you ${time}?`
+`Hello ${name}, how are you ${time}?`  /* note */ // like in bash
 
 // Construct an HTTP request prefix is used to interpret the replacements and construction
 GET`http://foo.org/bar?a=${a}&b=${b}
@@ -132,7 +136,7 @@ Destructuring allows binding using pattern matching, with support for matching a
 
 ```JavaScript
 // list matching
-var [a, , b] = [1,2,3];
+var [a, , b] = [1,2,3];     /* note */ // destructing like in python, or depackage? in clojure
 
 // object matching
 var { op: a, lhs: { op: b }, rhs: c }
@@ -161,14 +165,14 @@ a === 1;
 Callee-evaluated default parameter values.  Turn an array into consecutive arguments in a function call.  Bind trailing parameters to an array.  Rest replaces the need for `arguments` and addresses common cases more directly.
 
 ```JavaScript
-function f(x, y=12) {
+function f(x, y=12) {         /* note */ // default is cool, and useful
   // y is 12 if not passed (or passed as undefined)
   return x + y;
 }
 f(3) == 15
 ```
 ```JavaScript
-function f(x, ...y) {
+function f(x, ...y) {        /* note */ // rest, pass multiple varibles with `...vars` syntax
   // y is an Array
   return x * y.length;
 }
@@ -179,7 +183,7 @@ function f(x, y, z) {
   return x + y + z;
 }
 // Pass each elem of array as argument
-f(...[1,2,3]) == 6
+f(...[1,2,3]) == 6          /* note */ // spread, like squeeze some butter
 ```
 
 ### Let + Const
@@ -189,10 +193,10 @@ Block-scoped binding constructs.  `let` is the new `var`.  `const` is single-ass
 ```JavaScript
 function f() {
   {
-    let x;
+    let x;       /* note */ // let, like `let` in scheme, local varible
     {
       // okay, block scoped name
-      const x = "sneaky";
+      const x = "sneaky"; /* note */ // const
       // error, const
       x = "foo";
     }
@@ -206,7 +210,7 @@ function f() {
 Iterator objects enable custom iteration like CLR IEnumerable or Java Iterable.  Generalize `for..in` to custom iterator-based iteration with `for..of`.  Don’t require realizing an array, enabling lazy design patterns like LINQ.
 
 ```JavaScript
-let fibonacci = {
+let fibonacci = {     /* note */ // generator? pretty identical. see [generators](#generators)
   [Symbol.iterator]() {
     let pre = 0, cur = 1;
     return {
@@ -226,7 +230,7 @@ for (var n of fibonacci) {
 }
 ```
 
-Iteration is based on these duck-typed interfaces (using [TypeScript](http://typescriptlang.org) type syntax for exposition only):
+Iteration is based on these duck-typed interfaces (using [TypeScript](http://typescriptlang.org) type syntax for exposition only): /* todo */
 ```TypeScript
 interface IteratorResult {
   done: boolean;
@@ -253,7 +257,7 @@ var fibonacci = {
       var temp = pre;
       pre = cur;
       cur += temp;
-      yield cur;
+      yield cur;     /* note */ // generators always yield, yield, and yield...
     }
   }
 }
@@ -266,7 +270,7 @@ for (var n of fibonacci) {
 }
 ```
 
-The generator interface is (using [TypeScript](http://typescriptlang.org) type syntax for exposition only):
+The generator interface is (using [TypeScript](http://typescriptlang.org) type syntax for exposition only): /* koan */ // seems you guys did lost of contributions.
 
 ```TypeScript
 interface Generator extends Iterator {
@@ -280,9 +284,9 @@ Non-breaking additions to support full Unicode, including new Unicode literal fo
 
 ```JavaScript
 // same as ES5.1
-"𠮷".length == 2
+"𠮷".length == 2            /* koan */ // not work on my computer
 
-// new RegExp behaviour, opt-in ‘u’
+// new RegExp behaviour, opt-in ‘u’ /* todo */
 "𠮷".match(/./u)[0].length == 2
 
 // new form
@@ -302,14 +306,14 @@ Language-level support for modules for component definition.  Codifies patterns 
 
 ```JavaScript
 // lib/math.js
-export function sum(x, y) {
+export function sum(x, y) { /* note */ // EXPORT: export function fname(){}, export var vname
   return x + y;
 }
 export var pi = 3.141593;
 ```
 ```JavaScript
 // app.js
-import * as math from "lib/math";
+import * as math from "lib/math"; /* note */ // IMPORT: import * as m from "path/to/module[.js]"
 alert("2π = " + math.sum(math.pi, math.pi));
 ```
 ```JavaScript
@@ -322,7 +326,7 @@ Some additional features include `export default` and `export *`:
 
 ```JavaScript
 // lib/mathplusplus.js
-export * from "lib/math";
+export * from "lib/math";     /* koan */ // export * from? what for?
 export var e = 2.71828182846;
 export default function(x) {
     return Math.log(x);
@@ -334,10 +338,10 @@ import ln, {pi, e} from "lib/mathplusplus";
 alert("2π = " + ln(e)*pi*2);
 ```
 
-### Module Loaders
+### Module Loaders /* todo */
 Module loaders support:
 - Dynamic loading
-- State isolation
+- State isolation /* note */ // this is good
 - Global namespace isolation
 - Compilation hooks
 - Nested virtualization
@@ -367,7 +371,7 @@ Efficient data structures for common algorithms.  WeakMaps provides leak-free ob
 ```JavaScript
 // Sets
 var s = new Set();
-s.add("hello").add("goodbye").add("hello");
+s.add("hello").add("goodbye").add("hello");    /* note */ // chained set append
 s.size === 2;
 s.has("hello") === true;
 
@@ -404,7 +408,7 @@ var p = new Proxy(target, handler);
 p.world === 'Hello, world!';
 ```
 
-```JavaScript
+```JavaScript /* note */ // ahy, `JavaScript`, not `js`
 // Proxying a function object
 var target = function () { return 'I am the target'; };
 var handler = {
@@ -530,14 +534,14 @@ Object.assign(Point, { origin: new Point(0,0) })
 Two new numeric literal forms are added for binary (`b`) and octal (`o`).
 
 ```JavaScript
-0b111110111 === 503 // true
+0b111110111 === 503 // true    /* note */ // I really like this part, 0x => 0x, 0b, 0o, this is natural.
 0o767 === 503 // true
 ```
 
-### Promises
+### Promises /* note */ // *nice part
 Promises are a library for asynchronous programming.  Promises are a first class representation of a value that may be made available in the future.  Promises are used in many existing JavaScript libraries.
 
-```JavaScript
+```JavaScript /* note */ // Promises
 function timeout(duration = 0) {
     return new Promise((resolve, reject) => {
         setTimeout(resolve, duration);
